@@ -12,8 +12,6 @@ namespace FunctionAppSaveToQueue
 {
     public class AzFunctionSaveToQueue
     {
-        private const decimal TaxRate = 0.18m;
-
         [Function("ProcessOrderAndEnqueue")]
         [QueueOutput("ordersprocessed", Connection = "AzureWebJobsStorage")]
         public async Task<string> RunAsync(
