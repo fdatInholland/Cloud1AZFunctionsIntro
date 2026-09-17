@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.11.12210.170 insiders
+VisualStudioVersion = 18.11.12210.170
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppTimer", "FunctionAppTimer\FunctionAppTimer.csproj", "{7ED4BEF2-B06F-4CCF-9F28-4EB10C34C345}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppQueueTriggerSave
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppDependencyInjection", "FunctionAppDependencyInjection\FunctionAppDependencyInjection.csproj", "{17496D51-4A10-4B34-9138-867DB7EAB1EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppOutPutNet6", "FunctionAppOutPutNet5\FunctionAppOutPutNet6.csproj", "{D26AC486-A595-46C2-8D0B-A3884B680606}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppMultipleOutPut", "FunctionAppOutPutNet5\FunctionAppMultipleOutPut.csproj", "{D26AC486-A595-46C2-8D0B-A3884B680606}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionAppWorldsSmallestAPI", "FunctionAppWorldsSmallestAPI\FunctionAppWorldsSmallestAPI.csproj", "{61F774CB-9090-44B5-9970-1E63E557E062}"
 EndProject
