@@ -48,7 +48,7 @@ namespace FunctionAppOutPutNet5
     // Class defining the combined outputs
     public class MultipleOutputType
     {
-        // The HTTP response bound to ASP.NET Core IActionResult
+        // The HTTP response bound to ASP.NET Core IActionResult -- hmm?
         public IActionResult Result { get; set; }
 
         // Output binding pushing the payload to Azure Storage Queue

@@ -1,10 +1,11 @@
+using FunctionAppDependencyInjection.DTO;
 using FunctionAppDependencyInjection.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.IO;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FunctionAppDependencyInjection;
@@ -19,35 +20,59 @@ public class AZDependancyDemo
         _orderService = orderService;
     }
 
+    private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     [Function("AZDependancyDemo")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string inputString = req.Query["customerid"];
+        //e.g. "CUST-8041"
+        string customerId = null;
+        string inputString = null;
 
-        if (string.IsNullOrEmpty(inputString))
+        _logger.LogInformation("Processing customer orders request.");
+
+        // 1. Check Query String (Case-insensitive check)
+        string queryVal = req.Query.Get("customerId");
+        if (!string.IsNullOrEmpty(queryVal))
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            customerId = queryVal;
+        }
 
-            if (!string.IsNullOrEmpty(requestBody))
+        // 2. Fallback to Body for POST requests using strongly typed DTO
+        if (string.IsNullOrEmpty(customerId) && req.Body.CanRead)
+        {
+            try
             {
-                var data = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(requestBody);
-                if (data != null && data.ContainsKey("customerid"))
-                {
-                    inputString = data["customerid"];
-                }
-                else
-                {
-                    inputString = requestBody;
-                }
+                var requestData = await JsonSerializer.DeserializeAsync<CustomerRequest>(req.Body, JsonOptions);
+                customerId = requestData?.CustomerId;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogWarning(ex, "Failed to deserialize JSON request body.");
+
+                var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badResponse.WriteStringAsync("Please provide a valid customerId.");
+                return badResponse;
             }
         }
 
-        if (string.IsNullOrEmpty(inputString))
+        // 3. Validation Guard Clause
+        if (string.IsNullOrEmpty(customerId))
         {
-            return new BadRequestObjectResult("Please pass a string in the query string or request body.");
+            var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            await badResponse.WriteStringAsync("Please provide a valid customerId.");
+            return badResponse;
         }
-        return new OkObjectResult(_orderService.GetAllOrdersByCustomerID(inputString));
+
+        // 4. Return Orders
+        var okResponse = req.CreateResponse(HttpStatusCode.OK);
+        await okResponse.WriteAsJsonAsync(_orderService.GetAllOrdersByCustomerID(inputString));
+
+        return okResponse;
     }
 }
