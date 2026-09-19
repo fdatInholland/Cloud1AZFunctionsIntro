@@ -25,18 +25,18 @@ public class AZDependancyDemo
         PropertyNameCaseInsensitive = true
     };
 
+
+    //Postman: http://localhost:7071/api/AZDependancyDemo/?customerid=CUST-8041
     [Function("AZDependancyDemo")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
 
         //e.g. "CUST-8041"
         string customerId = null;
-        string inputString = null;
 
         _logger.LogInformation("Processing customer orders request.");
 
-        // 1. Check Query String (Case-insensitive check)
+        // 1. Check Query String
         string queryVal = req.Query.Get("customerId");
         if (!string.IsNullOrEmpty(queryVal))
         {
@@ -70,8 +70,9 @@ public class AZDependancyDemo
         }
 
         // 4. Return Orders
+        var orders = await _orderService.GetAllOrdersByCustomerID(customerId);
         var okResponse = req.CreateResponse(HttpStatusCode.OK);
-        await okResponse.WriteAsJsonAsync(_orderService.GetAllOrdersByCustomerID(inputString));
+        await okResponse.WriteAsJsonAsync(orders);
 
         return okResponse;
     }

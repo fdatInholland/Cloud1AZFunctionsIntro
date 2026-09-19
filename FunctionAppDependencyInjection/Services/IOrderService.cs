@@ -1,10 +1,11 @@
 ﻿using FunctionAppDependencyInjection.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FunctionAppDependencyInjection.Services
 {
     public interface IOrderService
     {
-         IEnumerable<Order> GetAllOrdersByCustomerID(string CustomerId);
+         Task<IEnumerable<Order>> GetAllOrdersByCustomerID(string CustomerId);
     }
 }

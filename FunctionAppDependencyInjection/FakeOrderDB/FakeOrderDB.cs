@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FunctionAppDependencyInjection.FakeProductDB
 {
@@ -14,10 +15,10 @@ namespace FunctionAppDependencyInjection.FakeProductDB
             orders = GetOrders();
         }
 
-        public IEnumerable<Order> GetAllOrdersByCustomerID(string customerId)
+        Task<IEnumerable<Order>> IFakeOrderDB.GetAllOrdersByCustomerID(string customerId)
         {
-         
-           return orders.Where(o => o.CustomerId == customerId);
+            var foundorders= orders.Where(o => o.CustomerId == customerId);
+            return Task.FromResult(foundorders);
         }
 
         private IEnumerable<Order> GetOrders()

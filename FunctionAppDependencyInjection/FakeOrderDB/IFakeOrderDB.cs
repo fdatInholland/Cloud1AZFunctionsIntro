@@ -1,10 +1,11 @@
 ﻿using FunctionAppDependencyInjection.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FunctionAppDependencyInjection.FakeProductDB
 {
     public interface IFakeOrderDB
     {
-        IEnumerable<Order> GetAllOrdersByCustomerID(string customerId);
+       Task<IEnumerable<Order>> GetAllOrdersByCustomerID(string customerId);
     }
 }

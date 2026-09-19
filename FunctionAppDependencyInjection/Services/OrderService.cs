@@ -1,6 +1,7 @@
 ﻿using FunctionAppDependencyInjection.Domain;
 using FunctionAppDependencyInjection.FakeProductDB;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FunctionAppDependencyInjection.Services
 {
@@ -12,9 +13,12 @@ namespace FunctionAppDependencyInjection.Services
         {
             _fakeOrderDB = fakeorderDB;
         }
-        public IEnumerable<Order> GetAllOrdersByCustomerID(string CustomerId)
+
+        public Task<IEnumerable<Order>> GetAllOrdersByCustomerID(string CustomerId)
         {
-            return _fakeOrderDB.GetAllOrdersByCustomerID(CustomerId);
+            var foundorders = _fakeOrderDB.GetAllOrdersByCustomerID(CustomerId);
+
+            return foundorders;
         }
     }
 }
