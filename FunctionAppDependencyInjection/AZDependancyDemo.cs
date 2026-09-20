@@ -30,7 +30,6 @@ public class AZDependancyDemo
     [Function("AZDependancyDemo")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
-
         //e.g. "CUST-8041"
         string customerId = null;
 
